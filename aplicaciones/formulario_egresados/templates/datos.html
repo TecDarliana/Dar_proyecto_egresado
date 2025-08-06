@@ -1,0 +1,299 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}">
+    <style>
+        body {
+            background-color: #eef2f5; /* Un fondo gris muy claro */
+        }
+        .form-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            max-width: 850px; /* Un tamaño más agradable, no tan ancho */
+            margin: 2.5rem auto; /* Centrado y con margen superior/inferior */
+        }
+        .readonly-field {
+            background-color: #e9ecef;
+        }
+        /* Ajuste para que los campos de Django se vean bien con Bootstrap */
+        .form-control, .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .card-header h5 {
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <div class="form-container">
+            <h1 class="mb-5 text-center text-primary">Registro de Egresados</h1>
+            
+            
+            {% if messages %}
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const container = document.querySelector('.form-container');
+                    if (container) {
+                        const firstChild = container.firstChild;
+                        {% for message in messages %}
+                            const messageElement = document.createElement('div');
+                            messageElement.className = `alert alert-{{ message.tags }} alert-dismissible fade show`;
+                            messageElement.setAttribute('role', 'alert');
+                            messageElement.innerHTML = `
+                                <p class="mb-0">{{ message }}</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            `;
+                            container.insertBefore(messageElement, firstChild);
+                        {% endfor %}
+                    }
+                });
+            </script>
+            {% endif %}
+            
+            <form method="post" id="formulario-registro">
+                {% csrf_token %}
+                
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">Consulta y Datos Personales</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Ingresa una cédula y presiona "Consultar" para rellenar los datos automáticamente.</p>
+                        <div class="row g-3 align-items-end mb-4">
+                            <div class="col-md-4">
+                                <label for="id_nacionalidad" class="form-label">Nacionalidad:</label>
+                                {{ personal_form.nacionalidad|add_class:"form-select" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_cedula" class="form-label">Cédula:</label>
+                                {{ personal_form.cedula|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" id="boton-consultar" class="btn btn-primary w-100">Consultar</button>
+                            </div>
+                        </div>
+                        <div id="consulta-resultado" class="mb-3"></div>
+                        <hr class="my-4">
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="id_nombres" class="form-label">Nombres:</label>
+                                {{ personal_form.nombres|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_apellidos" class="form-label">Apellidos:</label>
+                                {{ personal_form.apellidos|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_email" class="form-label">Correo Electrónico:</label>
+                                {{ personal_form.email|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_telefono" class="form-label">Teléfono Celular:</label>
+                                {{ personal_form.telefono|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_telefono2" class="form-label">Teléfono Alternativo:</label>
+                                {{ personal_form.telefono2|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_fecha_naci" class="form-label">Fecha de Nacimiento:</label>
+                                {{ personal_form.fecha_naci|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_lugar_naci" class="form-label">Lugar de Nacimiento:</label>
+                                {{ personal_form.lugar_naci|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_titularidad" class="form-label">Titularidad:</label>
+                                {{ personal_form.titularidad|add_class:"form-select" }}
+                            </div>
+                             <div class="col-md-6">
+                                <label for="id_idiomas" class="form-label">Idiomas:</label>
+                                {{ personal_form.idiomas|add_class:"form-control" }}
+                            </div>
+                             <div class="col-md-6">
+                                <label for="id_ocupacion" class="form-label">Ocupación Actual:</label>
+                                {{ personal_form.ocupacion|add_class:"form-control" }}
+                            </div>
+                             <div class="col-12">
+                                <label for="id_direccion" class="form-label">Dirección en Venezuela:</label>
+                                {{ personal_form.direccion|add_class:"form-control" }}
+                            </div>
+                             <div class="col-md-4">
+                                <label for="id_estado" class="form-label">Estado:</label>
+                                {{ personal_form.estado|add_class:"form-select" }}
+                            </div>
+                             <div class="col-md-4">
+                                <label for="id_municipio" class="form-label">Municipio:</label>
+                                {{ personal_form.municipio|add_class:"form-select" }}
+                            </div>
+                             <div class="col-md-4">
+                                <label for="id_parroquia" class="form-label">Parroquia:</label>
+                                {{ personal_form.parroquia|add_class:"form-select" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">Datos Académicos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                             <div class="col-md-6">
+                                <label for="id_tipo_beca" class="form-label">Tipo de Beca:</label>
+                                {{ academic_form.tipo_beca|add_class:"form-select" }}
+                            </div>
+                             <div class="col-md-6">
+                                <label for="id_carrera" class="form-label">Carrera Cursada:</label>
+                                {{ academic_form.carrera|add_class:"form-control" }}
+                            </div>
+                             <div class="col-md-4">
+                                <label for="id_fecha_ing" class="form-label">Fecha de Ingreso:</label>
+                                {{ academic_form.fecha_ing|add_class:"form-control" }}
+                            </div>
+                             <div class="col-md-4">
+                                <label for="id_fecha_egr" class="form-label">Fecha de Egreso:</label>
+                                {{ academic_form.fecha_egr|add_class:"form-control" }}
+                            </div>
+                             <div class="col-md-4">
+                                <label for="id_tipo_becario" class="form-label">Tipo de Becario:</label>
+                                {{ academic_form.tipo_becario|add_class:"form-select" }}
+                            </div>
+                             <div class="col-12">
+                                <label for="id_universidad" class="form-label">Universidad:</label>
+                                {{ academic_form.universidad|add_class:"form-control" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">Guardar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    
+    <script>
+        document.getElementById('boton-consultar').addEventListener('click', function() {
+            const nacionalidad = document.getElementById('id_nacionalidad').value;
+            const cedula = document.getElementById('id_cedula').value;
+            const consultaResultado = document.getElementById('consulta-resultado');
+
+            consultaResultado.innerHTML = '<p class="text-info">Cargando datos...</p>';
+
+            const urlConsulta = `/datos/?nacionalidad=${nacionalidad}&cedula=${cedula}`;
+
+            fetch(urlConsulta)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error ${response.status}: No se pudo obtener la información.`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.data) {
+                        const persona = data.data;
+
+                        const formatDate = (inputDate) => {
+                            if (!inputDate) return '';
+                            try {
+                                const date = new Date(inputDate);
+                                const year = date.getFullYear();
+                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                const day = String(date.getDate()).padStart(2, '0');
+                                return `${year}-${month}-${day}`;
+                            } catch (e) {
+                                console.error("Error al formatear la fecha:", e);
+                                return '';
+                            }
+                        };
+                        
+                        document.getElementById('id_cedula').value = persona.cedula.replace(/V-|E-/g, '');
+                        document.getElementById('id_nombres').value = persona.name;
+                        document.getElementById('id_apellidos').value = persona.lastname;
+                        document.getElementById('id_fecha_naci').value = formatDate(persona.birthDate);
+                        
+                        document.getElementById('id_cedula').readOnly = true;
+                        document.getElementById('id_nombres').readOnly = true;
+                        document.getElementById('id_apellidos').readOnly = true;
+                        document.getElementById('id_fecha_naci').readOnly = true;
+                        document.getElementById('id_cedula').classList.add('readonly-field');
+                        document.getElementById('id_nombres').classList.add('readonly-field');
+                        document.getElementById('id_apellidos').classList.add('readonly-field');
+                        document.getElementById('id_fecha_naci').classList.add('readonly-field');
+                        
+                        consultaResultado.innerHTML = '<p class="text-success">Datos encontrados y cargados.</p>';
+                    } else {
+                        document.getElementById('id_cedula').readOnly = false;
+                        document.getElementById('id_nombres').readOnly = false;
+                        document.getElementById('id_apellidos').readOnly = false;
+                        document.getElementById('id_fecha_naci').readOnly = false;
+                        document.getElementById('id_cedula').classList.remove('readonly-field');
+                        document.getElementById('id_nombres').classList.remove('readonly-field');
+                        document.getElementById('id_apellidos').classList.remove('readonly-field');
+                        document.getElementById('id_fecha_naci').classList.remove('readonly-field');
+
+                        consultaResultado.innerHTML = `<p class="text-warning">${data.message || 'No se encontraron datos.'} Puede completar el formulario manualmente.</p>`;
+                    }
+                })
+                .catch(error => {
+                    consultaResultado.innerHTML = `<p class="text-danger">Ocurrió un error: ${error.message}</p>`;
+                    console.error('Error al obtener los datos:', error);
+                });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cedulaField = document.getElementById('id_cedula');
+            const nombresField = document.getElementById('id_nombres');
+            const apellidosField = document.getElementById('id_apellidos');
+            const fechaNaciField = document.getElementById('id_fecha_naci');
+    
+            if (cedulaField && cedulaField.value && nombresField && nombresField.value && apellidosField && apellidosField.value) {
+                cedulaField.readOnly = true;
+                nombresField.readOnly = true;
+                apellidosField.readOnly = true;
+                fechaNaciField.readOnly = true;
+                
+                cedulaField.classList.add('readonly-field');
+                nombresField.classList.add('readonly-field');
+                apellidosField.classList.add('readonly-field');
+                fechaNaciField.classList.add('readonly-field');
+                
+                const consultaResultado = document.getElementById('consulta-resultado');
+                if (consultaResultado) {
+                    consultaResultado.innerHTML = '<p class="text-success">Datos encontrados y cargados.</p>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+/* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+} 
+body {
+  background-image: url(/static/imagen/fondo.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  /**display: flex;**/
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+} 
+
+/* .encabezado{
+
+  /** background-image: url(/static/imagen/cintillo.png);
+  background-image: url(/static/imagen/cintillo.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 10vh;
+
+}*/ **/ 
+
+.contenedor {
+  
+  position: center; 
+  max-width: 700px;
+  width: 100%;
+  /** background: #fff; */
+  background: rgb(0, 166, 255);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.235);
+}
+
+.contenedor .listado {
+  position: center; 
+  max-width: 1000px;
+  width: 100%;
+   /** background: #fff; */
+  background: rgb(0, 166, 255);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.235);
+}
+
+.contenedor header {
+
+ 
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  height: 10vh;
+
+}
+.contenedor .formulario {
+  margin-top: 30px;
+  /** position: center;  **/
+
+}
+.formulario .entrada {
+  /** se ajusto el porcentaje de 100 a 30 y se agrega position */
+
+  width: 30%;
+  margin-top: 20px;
+ 
+  max-width: 700px;
+  width: 100%;
+  /** background: #fff; */
+  background: rgba(0, 0, 0, 0.235);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.235);
+  
+}
+.entrada label {
+  color: rgb(4, 15, 20);
+}
+.formulario :where(.entrada input, .caja-select) {
+  position: center;
+  height: 50px;
+  width: 100%;
+  outline: none;
+  font-size: 1rem;
+  color: rgb(107, 107, 107);
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0 15px;
+}
+
+.entrada input:focus {
+  box-shadow: 0 2px rgb(0, 166, 255);
+}
+
+
+.formulario .columna {
+  display: flex;
+  
+ /** display: grid; **/
+  column-gap: 15px; 
+ /** grid-template-columns: 1fr 1fr; **/
+  
+}
+
+.caja-select select {
+  height: 100%;
+  width: 100%;
+  outline: none;
+  border: none;
+  color: rgb(107, 107, 107);
+  font-size: 1rem;
+}
+
+.formulario button {
+  height: 55px;
+  width: 100%;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 30px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgb(0, 166, 255);
+}
+.formulario button:hover {
+  background: rgb(107, 107, 107);
+}
+
+.division{
+  display: flex;
+}

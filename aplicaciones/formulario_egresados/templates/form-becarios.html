@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <style>
+        /*  */
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-section { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="email"], select, textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background-color: #0056b3; }
+        .errorlist { color: red; list-style-type: none; padding: 0; margin-top: -8px; margin-bottom: 10px; }
+        .readonly-field { background-color: #e9ecef; } /* Estilo para campos no editables */
+        #consulta-container { margin-bottom: 20px; padding: 15px; border: 1px solid #007bff; border-radius: 5px; }
+        #consulta-resultado { margin-top: 15px; font-style: italic; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Registro de Usuario</h1>
+
+    <div id="consulta-container">
+        <h2>Consultar Datos por Cédula</h2>
+        <form id="formulario-consulta">
+            {% csrf_token %}
+            <label for="id_nacionalidad_consulta">Nacionalidad:</label>
+            <select id="id_nacionalidad_consulta" name="nacionalidad" required>
+                <option value="V">Venezolano</option>
+                <option value="E">Extranjero</option>
+            </select>
+            <label for="id_cedula_consulta">Ingresa el número de cédula:</label>
+            <input type="text" id="id_cedula_consulta" name="cedula" required>
+            <button type="submit">Consultar</button>
+        </form>
+        <div id="consulta-resultado">
+            <p>Ingresa una cédula y presiona "Consultar".</p>
+        </div>
+    </div>
+    
+    <form method="post" id="formulario-registro">
+        {% csrf_token %}
+        <div class="form-section">
+            <h2>Datos Personales</h2>
+            {{ personal_form.as_p }}
+        </div>
+        <div class="form-section">
+            <h2>Datos Académicos</h2>
+            {{ academic_form.as_p }}
+        </div>
+        <button type="submit">Guardar Registro</button>
+    </form>
+
+    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <script>
+        document.getElementById('formulario-consulta').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nacionalidad = document.getElementById('id_nacionalidad_consulta').value;
+            const cedula = document.getElementById('id_cedula_consulta').value;
+            const consultaResultado = document.getElementById('consulta-resultado');
+            consultaResultado.innerHTML = '<p>Cargando datos...</p>';
+
+            const urlConsulta = `/datos/?nacionalidad=${nacionalidad}&cedula=${cedula}`;
+            fetch(urlConsulta)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error ${response.status}: No se pudo obtener la información.`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success && data.data) {
+                        const persona = data.data;
+                        // Llenar los campos del formulario de registro con los datos obtenidos
+                        document.getElementById('id_cedula').value = persona.cedula;
+                        document.getElementById('id_nombres').value = persona.name;
+                        document.getElementById('id_apellidos').value = persona.lastname;
+                        // Marcar los campos como no editables
+                        document.getElementById('id_cedula').readOnly = true;
+                        document.getElementById('id_nombres').readOnly = true;
+                        document.getElementById('id_apellidos').readOnly = true;
+                        document.getElementById('id_cedula').classList.add('readonly-field');
+                        document.getElementById('id_nombres').classList.add('readonly-field');
+                        document.getElementById('id_apellidos').classList.add('readonly-field');
+                        
+                        consultaResultado.innerHTML = '<p style="color: green;">Datos encontrados y cargados.</p>';
+                    } else {
+                        consultaResultado.innerHTML = `<p style="color: orange;">${data.message || 'No se encontraron datos.'} Puede completar el formulario manualmente.</p>`;
+                        // Limpiar y habilitar los campos si no se encuentran datos
+                        document.getElementById('id_cedula').readOnly = false;
+                        document.getElementById('id_nombres').readOnly = false;
+                        document.getElementById('id_apellidos').readOnly = false;
+                        document.getElementById('id_cedula').classList.remove('readonly-field');
+                        document.getElementById('id_nombres').classList.remove('readonly-field');
+                        document.getElementById('id_apellidos').classList.remove('readonly-field');
+                    }
+                })
+                .catch(error => {
+                    consultaResultado.innerHTML = `<p style="color: red;">Ocurrió un error: ${error.message}</p>`;
+                    console.error('Error al obtener los datos:', error);
+                });
+        });
+    </script>
+</body>
+</html>
