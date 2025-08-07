@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import json 
-from aplicaciones.formulario_egresados.models import Estado, Municipio, Parroquia # Importa los modelos desde tu_app
+from aplicaciones.formulario_egresados.models import * # Importa los modelos desde tu_app
 
 #@require_POST
 #def get_municipios(request):
@@ -31,7 +31,7 @@ def filtrar_direccion(request):
             print("Entramos aqui..",request.body)
             data = json.loads(request.body)
             idestado = data.get('idestado')
-            dataBD = list(Municipio.objects.filter(idestado=idestado).values())
+            dataBD = list(municipio.objects.filter(idestado=idestado).values())
 
             return JsonResponse({'status': 200, 'data': dataBD})
         else:
